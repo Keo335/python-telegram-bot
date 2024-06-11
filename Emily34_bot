@@ -1,0 +1,21 @@
+import telegram
+from telegram.ext import Updater, MessageHandler, Filters
+import openai
+
+openai.api_key = 'org-rzBm9IMoPVTJikRhgxUtEfMn'
+bot_token = '7446149084:AAGNV_ljD2KB-FjK2RNKYAMYti5AKLUnTMk'
+
+def handle_message(update, context):
+    user_message = update.message.text
+    response = openai.Completion.create(
+        engine="text-davinci-003",
+        prompt=user_message,
+        max_tokens=150
+    )
+    update.message.reply_text(response.choices[0].text.strip())
+
+updater = Updater(token=bot_token, use_context=True)
+dispatcher = updater.dispatcher
+dispatcher.add_handler(MessageHandler(Filters.text, handle_message))
+
+updater.start_polling()
